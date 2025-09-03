@@ -1,15 +1,8 @@
 #include "robot.h"
-#include <IRdecoder.h>
 
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
-
-    /**
-     * Initialize the IR decoder. Declared extern in IRdecoder.h; see robot-remote.cpp
-     * for instantiation and setting the pin.
-     */
-    decoder.init();
 
     /**
      * TODO: Set pin 13 HIGH when navigating and LOW when destination is reached.
@@ -27,17 +20,11 @@ void Robot::EnterIdleState(void)
 
 /**
  * The main loop for your robot. Process both synchronous events (motor control),
- * and asynchronous events (IR presses, distance readings, etc.).
+ * and asynchronous events (distance readings, etc.).
 */
 void Robot::RobotLoop(void) 
 {
-    /**
-     * Handle any IR remote keypresses.
-     */
-    int16_t keyCode = decoder.getKeyCode();
-    if(keyCode != -1) HandleKeyCode(keyCode);
-
-    /**
+     /**
      * Run the chassis loop, which handles low-level control.
      */
     Twist velocity;
@@ -45,7 +32,8 @@ void Robot::RobotLoop(void)
     {
         // We do FK regardless of state
         UpdatePose(velocity);
-
+        chassis.SetMotorEfforts(220,-220);
+        
         /**
          * Here, we break with tradition and only call these functions if we're in the 
          * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want

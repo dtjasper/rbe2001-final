@@ -59,7 +59,7 @@ void Robot::DriveToPoint(void)
 #endif
 
         /**
-         * TODO: Call chassis.SetTwist() to command the motion, based on your calculations above.
+         * TODO: Call chassis.SetMotorEfforts() to command the motion, based on your calculations above.
          */
     }
 }

@@ -6,17 +6,6 @@ class Robot
 {
 protected:
     /**
-     * We define some modes for you. SETUP is used for adjusting gains and so forth. Most
-     * of the activities will run in AUTO. You shouldn't need to mess with these.
-     */
-    enum ROBOT_CTRL_MODE
-    {
-        CTRL_TELEOP,
-        CTRL_AUTO,
-    };
-    ROBOT_CTRL_MODE robotCtrlMode = CTRL_AUTO;
-
-    /**
      * robotState is used to track the current task of the robot. You will add new states as 
      * the term progresses.
      */
@@ -45,15 +34,8 @@ public:
     void RobotLoop(void);
 
 protected:
-    /* For managing IR remote key presses*/
-    void HandleKeyCode(int16_t keyCode);
-
     /* State changes */    
     void EnterIdleState(void);
-
-    /* Mode changes */
-    void EnterTeleopMode(void);
-    void EnterAutoMode(void);
 
     // /* Navigation methods.*/
     void UpdatePose(const Twist& u);

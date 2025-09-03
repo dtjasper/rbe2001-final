@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include <FastGPIO.h>
-#include "Romi32U4MotorParameters.h"
 
 // define the motor pins here
 #define PWM_L 10
@@ -24,29 +23,11 @@ protected:
     // For prettier printing
     const String name;
 
-    // Used to control the motors in different ways
-    enum CTRL_MODE : uint8_t {CTRL_DIRECT, CTRL_SPEED};
-    volatile CTRL_MODE ctrlMode = CTRL_DIRECT;
-
-    // Used to manage PID coefficients; note that the defaults stink for speed control.
-    float Kp = KP_MOTOR;
-    float Ki = KI_MOTOR;
-    float Kd = KD_MOTOR;
-
-    // Used to keep track of the target speed, in counts / interval.
-    float targetSpeed = 0;
-
     /**
      * This is the speed of the motor, in "encoder counts / encoder interval".
      * The encoder interval is set in Robot::InitializeMotorControlTimer.
      */ 
     volatile int16_t speed = 0;
-
-    // For tracking the error integral (sum)
-    float sumError = 0;
-
-    // For tracking derivative (difference)
-    float prevError = 0;
 
     // Maximum effort
     int16_t maxEffort = 420;
@@ -69,7 +50,6 @@ protected:
      */
     void SetMotorEffortDirect(int16_t effort)
     {
-        ctrlMode = CTRL_DIRECT;
         SetEffort(effort);
     }
 
@@ -93,63 +73,19 @@ protected:
     }
 
     /**
-     * Sets the target speed in "encoder ticks/16 ms interval"
-     * */
-    void SetTargetSpeed(float target)
+     * GetEncoderTotal() returns the total encoder counts" 
+     * 
+     */
+    int16_t GetEncoderTotal(void)
     {
-        targetSpeed = target;
+        cli();
+        int16_t currCount = encCount;
+        sei();
 
-        if(ctrlMode != CTRL_SPEED)
-        {
-            // Reset the error integral if we are switching from another mode
-            // Otherwise, the robot may jump due to residual integral
-            sumError = 0;
-
-            // Also set prevCount to encCount so to avoid speed jumps when switching mode
-            CalcEncoderDelta();
-        }
-
-        ctrlMode = CTRL_SPEED;
+        return currCount;
     }
 
-    /**
-     * ControlMotorSpeed implements the PID controller. It should _not_ be called by user code.
-     * Instead, ControlMotorSpeed is called from Chassis::UpdateMotors, which is on a timer schedule.
-    */
-    void ControlMotorSpeed(void)
-    {
-        if(ctrlMode == CTRL_SPEED)
-        {
-            /**
-             * TODO: Implement PI controller. Only P at the moment.
-             */
 
-            // Calculate the error in speed
-            float error = targetSpeed - speed;
-
-            sumError+= error;
-
-            int16_t effort = Kp * error + Ki * sumError;
-
-            // Set the effort for the motor
-            SetEffort(effort);
-
-#ifdef __MOTOR_DEBUG__
-                Serial.print('>');
-                Serial.print(name);
-                Serial.print("_target:");
-                Serial.println(targetSpeed);
-                Serial.print('>');
-                Serial.print(name);
-                Serial.print("_speed:");
-                Serial.println(speed);
-                Serial.print('>');
-                Serial.print(name);
-                Serial.print("_error:");
-                Serial.println(error);
-#endif
-        }    
-    }
 
     static void AttachInterrupts(void);
 
@@ -193,7 +129,6 @@ protected:
 
 public:
     Romi32U4MotorBase(const String& nm) : name(nm) {}
-    void SetPIDCoeffs(float p, float i, float d) {Kp = p; Ki = i; Kd = d; sumError = 0;}
 };
 
 template <uint8_t encXOR, uint8_t encB, uint8_t PWM, uint8_t DIR, uint8_t OCR> 

@@ -108,9 +108,6 @@ bool Chassis::ChassisLoop(Twist& velocity)
         Serial.print('\n');
 #endif
 
-        // motor updates
-        UpdateMotors();
-
         /* Update the wheel velocity so it gets back to Robot. */
         velocity = CalcOdomFromWheelMotion();
 
@@ -139,30 +136,6 @@ void Chassis::SetMotorEfforts(int16_t left, int16_t right)
     rightMotor.SetMotorEffortDirect(right);
 }
 
-void Chassis::UpdateMotors(void)
-{
-    leftMotor.ControlMotorSpeed();
-    rightMotor.ControlMotorSpeed();
-}
-
-/**
- * SetWheelSpeeds converts the linear wheel speeds (axes relative to ground) to motor speeds.
- */
-void Chassis::SetWheelSpeeds(float leftSpeedCMperSec, float rightSpeedCMperSec)
-{
-    /** 
-     * TODO: Check the code below. You did this in Lab 1, so we give you the calcs.
-     */
-    leftMotor.SetTargetSpeed(leftSpeedCMperSec * LEFT_TICKS_PER_CM * CONTROL_LOOP_PERIOD_MS / 1000.);
-    rightMotor.SetTargetSpeed(rightSpeedCMperSec * RIGHT_TICKS_PER_CM * CONTROL_LOOP_PERIOD_MS / 1000.);
-}
-
-void Chassis::SetTwist(const Twist& twist)
-{
-    /**
-     * TODO: Complete SetTwist() to call SetWheelSpeeds() from target u and omega
-     */
-}
 
 Twist Chassis::CalcOdomFromWheelMotion(void)
 {

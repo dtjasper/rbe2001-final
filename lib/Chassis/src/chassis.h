@@ -42,12 +42,10 @@ public:
     void SetTwist(const Twist& twist);
     Twist CalcOdomFromWheelMotion(void);
 
-    /**
-     * A utility function for converting robot speed to wheel speed. Left 
-     * public so that you can test more easily.
-     */
-    void SetWheelSpeeds(float, float);
-    void Stop(void) { SetWheelSpeeds(0, 0); }
+
+    void SetMotorEfforts(int16_t, int16_t);
+
+    void Stop(void) { SetMotorEfforts(0, 0);} 
 
 protected:
     /**
@@ -57,5 +55,4 @@ protected:
     void InitializeMotors(void);
     
     void UpdateMotors(void);
-    void SetMotorEfforts(int16_t, int16_t);
 };
