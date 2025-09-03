@@ -36,10 +36,6 @@ public:
     static void Timer4OverflowISRHandler(void);
 
 public:
-    /**
-     * SetTwist eliminates the need for DriveAt and TurnAt
-     */
-    void SetTwist(const Twist& twist);
     Twist CalcOdomFromWheelMotion(void);
 
 
