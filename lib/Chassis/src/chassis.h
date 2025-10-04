@@ -38,6 +38,7 @@ public:
 public:
     Twist CalcOdomFromWheelMotion(void);
 
+    //Pose myDirection(float x, float y, float theta);
 
     void SetMotorEfforts(int16_t, int16_t);
 
@@ -49,6 +50,5 @@ protected:
      */
     void InitializeMotorControlTimer(void);
     void InitializeMotors(void);
-    
     void UpdateMotors(void);
 };

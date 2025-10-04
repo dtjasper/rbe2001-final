@@ -1,21 +1,37 @@
 #include "robot.h"
+int count{0};
+/*int way_points[9] = {-150, 75, 0,
+                    -190, 120, 0,
+                    -230, 150, 0
+};*/
 
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
+    //this works
+    //int way_points[9] = {(-150,75,0), (3,4), (4,5)};
+    //int way_points[9] = {-150, 75, 0};
 
+    //Pose inputDestination1 {200, 400, 0.0};
+    //500,-400,0
+    //500,-500,0
+
+    SetDestination(pose1);
     /**
      * TODO: Set pin 13 HIGH when navigating and LOW when destination is reached.
      * Need to set as OUTPUT here.
      */
+    //pinMode(13, HIGH);
 }
 
 void Robot::EnterIdleState(void)
 {
+    count++;
     chassis.Stop();
 
     Serial.println("-> IDLE");
     robotState = ROBOT_IDLE;
+
 }
 
 /**
@@ -27,12 +43,16 @@ void Robot::RobotLoop(void)
      /**
      * Run the chassis loop, which handles low-level control.
      */
+ 
+    //this robotState thing was not there before, so it may be wrong to have
+    if(robotState != ROBOT_IDLE) {
     Twist velocity;
     if(chassis.ChassisLoop(velocity))
     {
         // We do FK regardless of state
+
         UpdatePose(velocity);
-        chassis.SetMotorEfforts(220,-220);
+        //chassis.SetMotorEfforts(0,0); //220,220
         
         /**
          * Here, we break with tradition and only call these functions if we're in the 
@@ -46,5 +66,6 @@ void Robot::RobotLoop(void)
             DriveToPoint();
             if(CheckReachedDestination()) HandleDestination();
         }
+    }
     }
 }

@@ -119,6 +119,8 @@ bool Chassis::ChassisLoop(Twist& velocity)
     return retVal;
 }
 
+
+
 /**
  * Some motor methods.
  */
@@ -137,9 +139,36 @@ void Chassis::SetMotorEfforts(int16_t left, int16_t right)
 }
 
 
+
 Twist Chassis::CalcOdomFromWheelMotion(void)
 {
+
     Twist velocity;
+
+    //get left motor u and right motor u then avergage them out
+    float leftSpeed = leftMotor.speed;
+    float rightSpeed = rightMotor.speed;
+    float circumCalc = 219.9114858;
+
+    //ticks or count over cycle || 1 rev/1440 ticks || * 70mm -- 2 *(radius = 3.5cm to mm) * pi
+    //these are distances, not velocity due to not dividing by 20ms. However, the code runs every 20ms but isn't calculated in code
+    float adjLeftDist = leftSpeed * (1.0/1440) * circumCalc;
+    float adjRightDist = rightSpeed * (1.0/1440)*circumCalc;
+
+    //need to add both velos together, then average them out
+    float combine = adjLeftDist + adjRightDist;
+    combine /= 2.0;
+    velocity.u = combine;
+    
+    //divide by 140 which is wheel distance in mm
+    velocity.omega = (adjRightDist - adjLeftDist)/140;
+
+    //convert to radians to degrees
+    velocity.omega = velocity.omega * 180.0 / 3.14159265;
+
+
+
+
     /**
      * TODO: Calculate velocities from wheel motion, which are held in leftMotor.spped and rightMotor.speed.
      * Note that you might want to calculate the deltas instead of speeds (to save some floating point maths). 
@@ -148,8 +177,8 @@ Twist Chassis::CalcOdomFromWheelMotion(void)
      */
 
 #ifdef __NAV_DEBUG__
-    TeleplotPrint("u", velocity.u);
-    TeleplotPrint("omega", velocity.omega);
+    //TeleplotPrint("u", velocity.u);
+   // TeleplotPrint("omega", velocity.omega);
 #endif
 
     return velocity;

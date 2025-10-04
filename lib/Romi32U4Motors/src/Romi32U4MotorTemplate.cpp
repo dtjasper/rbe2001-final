@@ -16,3 +16,4 @@ void Romi32U4MotorBase::AttachInterrupts(void)
     attachPCInt(digitalPinToPCInterrupt(LEFT_XOR), leftISR);
     attachInterrupt(digitalPinToInterrupt(RIGHT_XOR), rightISR, CHANGE);
 }
+
