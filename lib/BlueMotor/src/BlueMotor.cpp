@@ -61,7 +61,7 @@ void BlueMotor::setup()
     TCCR3B = (1 << WGM32) | (1 << CS31) | (1 << CS30); // prescaler 64
 
     OCR3A = 0;
-    OCR0B = 0;
+    //OCR0B = 0;
 
     // ICR1 = 400; // for precise timing with encoders on motor a
 
@@ -214,7 +214,7 @@ void BlueMotor::setEffortMotorB(int effort, bool clockwise)
         digitalWrite(BIN1, LOW);
         digitalWrite(BIN2, HIGH);
     }
-    OCR0B = constrain(effort, 0, 400); // unsure
+    analogWrite(PWMBOutPin, (effort, 0, 400)); // unsure
 }
 
 // MOVES MOTOR A TO A POSITION (target)

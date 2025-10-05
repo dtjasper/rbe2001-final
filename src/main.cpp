@@ -9,6 +9,7 @@ BlueMotor motorB;
 
 
 
+
 void setup() 
 {
   Serial.begin(115200);
@@ -23,14 +24,15 @@ void setup()
 #endif
 
   robot.InitializeRobot();
+  motorA.setup();
 }
 
 void loop() 
 {
   // robot.RobotLoop();
-  
+
+  // both cannot spin at once
     motorA.setEffortA(100);
-    
-    motorB.setEffortB(100);
+    //motorB.setEffortB(100);
 
 }
