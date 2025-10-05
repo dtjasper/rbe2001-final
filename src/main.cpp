@@ -27,7 +27,7 @@ void setup()
   motorA.setup();
 }
 
-void loop() 
+void loop() // motors will only spin after "pio device monitor" goes in terminal rn
 {
   // robot.RobotLoop();
 
