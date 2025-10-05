@@ -1,7 +1,13 @@
 #include <Arduino.h>
 #include "robot.h"
+#include "BlueMotor.h"
 
 Robot robot;
+
+BlueMotor motorA;
+BlueMotor motorB;
+
+
 
 void setup() 
 {
@@ -21,5 +27,10 @@ void setup()
 
 void loop() 
 {
-  robot.RobotLoop();
+  // robot.RobotLoop();
+  
+    motorA.setEffortA(100);
+    
+    motorB.setEffortB(100);
+
 }
