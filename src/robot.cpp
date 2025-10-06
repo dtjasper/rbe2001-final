@@ -5,9 +5,15 @@ int count{0};
                     -230, 150, 0
 };*/
 
+
+
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
+    theArm.setup();
+    lowerLinkDriveMotor.setup();
+
+
     //this works
     //int way_points[9] = {(-150,75,0), (3,4), (4,5)};
     //int way_points[9] = {-150, 75, 0};
@@ -34,6 +40,7 @@ void Robot::EnterIdleState(void)
 
 }
 
+
 /**
  * The main loop for your robot. Process both synchronous events (motor control),
  * and asynchronous events (distance readings, etc.).
@@ -50,7 +57,7 @@ void Robot::RobotLoop(void)
     if(chassis.ChassisLoop(velocity))
     {
         // We do FK regardless of state
-
+        theArm.armLoop();
         UpdatePose(velocity);
         //chassis.SetMotorEfforts(0,0); //220,220
         

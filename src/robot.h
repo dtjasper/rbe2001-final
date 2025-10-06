@@ -1,6 +1,9 @@
 #pragma once
 
 #include "chassis.h"
+#include "servo32u4.h"
+#include "BlueMotor.h"
+#include "arm.h"
 
 class Robot
 {
@@ -18,6 +21,10 @@ protected:
 
     /* Define the chassis*/
     Chassis chassis;
+    arm theArm;
+
+
+
 
     // For managing key presses
     String keyString;
@@ -29,16 +36,18 @@ protected:
     Pose destPose;
 
 
+    Pose armPose1 {300, 300, 0};
+    Pose armPose2 {300, 300, 0};
+    Pose armPose3 {0, 0, 0};
+    //Pose armPoseTable[] = {armPose1,armPose2,armPose3};
 
     Pose pose1 {300, -300, 10};
     Pose pose2 {300, 300, 20};
     Pose pose3 {0, 0, 0};
 
-    //first two nums represent lower linkage and higher linkage angles respectively, third val is to never change.
-   
-    double lowerLinkPID = 0;
     
-    
+    BlueMotor lowerLinkDriveMotor; //formerly motor A
+    BlueMotor upperLinkDriveMotor; //formerly motor B
 
     
 
@@ -48,27 +57,21 @@ public:
     Robot(void) {keyString.reserve(10);}
     void InitializeRobot(void);
     void RobotLoop(void);
-
-    void armLoop();
+    
+    
 
 protected:
     /* State changes */    
     void EnterIdleState(void);
 
     // /* Navigation methods.*/
+    double getLowerLinkageDegreeChange(void);
+    double getUpperLinkageDegreeChange(void);
+    void updateUpperLinkagePos(void);
+    void updateLowerLinkagePos(void);
     void UpdatePose(const Twist& u);
     void SetDestination(const Pose& destination);
     void DriveToPoint(void);
     bool CheckReachedDestination(void);
     void HandleDestination(void);
-    void PIDCalc(int currAngle, int targAngle, double Kp);
-    double getLowerLinkPos();
-    void linkageLoop();
-    void Linkageloop();
-    double PIDCalcArm(int currAngle, int targAngle, double Kp);
-    bool valWithinTolerance(double currentVal, double targetVal, double tolerance);
-    void WholeLinkageToTarget(int lowerAngle, int upperAngle);
-    void calcArmPos();
-    void lowerLinkageToTarget(int targetAngle);
-    void LinkageToTarget(int, int);
 };
