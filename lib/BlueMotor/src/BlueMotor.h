@@ -9,6 +9,8 @@ public:
     void moveToMotorA(long position);
     long getPositionA();
     void moveToMotorB(long position);
+    int getMotorAEffort();
+    int getMotorBEffort();
     long getPositionB();
     void resetA();
     void resetB();

@@ -31,6 +31,10 @@ int MotorB_oldEncoderB = 0;
 int MotorB_newEncoderA = 0;
 int MotorB_newEncoderB = 0;
 
+//Motor Effort values for getters
+int MotorAEffort = 0;
+int MotorBEffort = 0;
+
 // COMPILER
 BlueMotor::BlueMotor()
 {
@@ -188,6 +192,7 @@ void BlueMotor::setEffortB(int effort)
 // SETS EFFORT FOR MOTOR A (private, with direction)
 void BlueMotor::setEffortMotorA(int effort, bool clockwise)
 {
+    MotorAEffort = effort;
     if (clockwise)
     {
         digitalWrite(AIN1, HIGH);
@@ -204,6 +209,7 @@ void BlueMotor::setEffortMotorA(int effort, bool clockwise)
 // SETS EFFORT FOR MOTOR B (private, with direction)
 void BlueMotor::setEffortMotorB(int effort, bool clockwise)
 {
+    MotorBEffort = effort;
     if (clockwise)
     {
         digitalWrite(BIN1, HIGH);
@@ -231,5 +237,11 @@ void BlueMotor::moveToMotorB(long target)  //Move to this encoder position withi
                                      //then stop
     
     setEffortB(0);
+}
+int BlueMotor::getMotorAEffort(){
+    return MotorAEffort;
+}
+int BlueMotor::getMotorBEffort(){
+    
 }
 
