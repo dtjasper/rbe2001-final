@@ -8,9 +8,6 @@ Robot robot;
 //Time romi spends per robot loop. UPDATE 
 
 
-
-
-
 void setup() 
 {
   Serial.begin(115200);
@@ -30,7 +27,7 @@ void setup()
 
 void loop() // motors will only spin after "pio device monitor" goes in terminal rn
 {
-  // robot.RobotLoop();
+  robot.RobotLoop();
 
   // both cannot spin at once
     //lowerLinkDriveMotor.setEffortA(100);

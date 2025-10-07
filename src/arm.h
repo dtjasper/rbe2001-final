@@ -8,11 +8,8 @@ class arm
 {
 protected:
 
-    Servo32U4Pin12 clawServo; // update when know pins
-
-
-    Pose armPose1 {300, 300, 0};
-    Pose armPose2 {300, 300, 0};
+    Pose armPose1 {3, 5, 0};
+    Pose armPose2 {5, 7, 0};
     Pose armPose3 {0, 0, 0};
     Pose armPoseTable[3] = {armPose1,armPose2,armPose3};
 
@@ -22,8 +19,8 @@ protected:
     
 
     //Values for converting encoder count to degrees. UPDATE
-    double lowerLinkEncoderToDegreeConst = 0;
-    double upperLinkEncoderToDegreeConst = 0;
+    double lowerLinkEncoderToDegreeConst = 0.25;
+    double upperLinkEncoderToDegreeConst = 0.25;
 
     //first two nums represent lower linkage and higher linkage angles respectively, third val is to never change.
    
@@ -33,6 +30,8 @@ protected:
     BlueMotor lowerLinkDriveMotor; //formerly motor A
     BlueMotor upperLinkDriveMotor; //formerly motor B
 
+    BlueMotor motorDriver;
+
     
 
     Pose destination_array[2] = {pose2, pose3};
@@ -41,17 +40,13 @@ public:
     void moveClaw(uint16_t position);
     void armLoop(void);
     void setup();
+    void Stop(void); 
 
 protected:
-    double getLowerLinkageDegreeChange(void);
-    double getUpperLinkageDegreeChange(void);
-    void updateUpperLinkagePos(void);
-    void updateLowerLinkagePos(void);
     double PIDCalcArm(int,int,double);
     bool valWithinTolerance(double, double, double);
     double getLowerLinkageDegreeChange(void);
     double getUpperLinkageDegreeChange(void);
-    void updateUpperLinkagePos(void);
     void updateLowerLinkagePos(void);
     void updateUpperLinkagePos(void);   
 

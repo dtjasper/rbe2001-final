@@ -7,6 +7,7 @@ double upperLinkStartAngle = 0;//angle between the two "interior" links on both 
 
 //Robot starts in rest, so both values should initialize to their start values
 
+// VARIABLES DEFINED IN SETUP
 double lowerLinkTarget;
 double upperLinkTarget;
 bool needOscillate;
@@ -20,6 +21,9 @@ double upperKP;
 
 double tolerance;
 
+double prevLowerPos = 0;
+double prevUpperPos = 0;
+
 
 //servo positions designating open and closed claws. UPDATE
 uint16_t clawClosePos = 0;
@@ -32,13 +36,13 @@ uint16_t clawOpenPos = 0;
 int currentTableInd = 0;
 
 void arm::setup(){
-    lowerLinkTarget = armPose1.x;
+    lowerLinkTarget = 10;
     upperLinkTarget = armPose1.y;
     needOscillate = armPose1.theta != 0; 
-    lowerLinkAngle = lowerLinkStartAngle; 
+    lowerLinkAngle = 0; 
     upperLinkAngle = upperLinkStartAngle; 
-    lowerKP=0;
-    upperKP=0;
+    lowerKP=0.5;
+    upperKP=1;
     tolerance = 5;
 }
 
@@ -54,30 +58,40 @@ double arm::PIDCalcArm(int currAngle,int targAngle,double Kp)
 }
 bool arm::valWithinTolerance(double currentVal, double targetVal, double tolerance)
 {
-    return (currentVal+tolerance>=targetVal) && (currentVal-tolerance<=targetVal);
+  // bool retVal = (currentVal + tolerance == targetVal + tolerance) || (currentVal - tolerance == targetVal - tolerance)
+  //(currentVal+tolerance>=targetVal) && (currentVal-tolerance<=targetVal);
+  return ((currentVal <= targetVal + tolerance) && (currentVal >= targetVal - tolerance));
 }
 void arm::updateLowerLinkagePos(){
-    lowerLinkAngle = lowerLinkStartAngle + getLowerLinkageDegreeChange();
+    lowerLinkAngle = lowerLinkAngle + getLowerLinkageDegreeChange();
+    
 }
 void arm::updateUpperLinkagePos(){
-    upperLinkAngle = upperLinkStartAngle + getUpperLinkageDegreeChange();
+    upperLinkAngle = upperLinkAngle + getUpperLinkageDegreeChange();
 }
 //To be defined
 double arm::getLowerLinkageDegreeChange()
 {
   //Gets the pose of the lower linkage. 
   //Note that this will likely end up returning the change in degrees from start position, since getPosA starts at 0 when robot starts up
-  return lowerLinkDriveMotor.getPositionA()*lowerLinkEncoderToDegreeConst;
+  double retVal = (motorDriver.getPositionA()-prevLowerPos)*lowerLinkEncoderToDegreeConst;
+  prevLowerPos = motorDriver.getPositionA();
+  return retVal;
 }
 //To be defined
 double arm::getUpperLinkageDegreeChange()
 {
   //Gets the pose of the lower linkage. 
   //Note that this will likely end up returning the change in degrees from start position, since getPosA starts at 0 when robot starts up
-  return upperLinkDriveMotor.getPositionB()*upperLinkEncoderToDegreeConst;
+  double retVal = (motorDriver.getPositionB()-prevUpperPos)*upperLinkEncoderToDegreeConst;
+  prevUpperPos = motorDriver.getPositionB();
+  return retVal;
 }
 
-
+void arm::Stop(){
+  motorDriver.goodSetEffort(0, true);
+  motorDriver.goodSetEffort(0, false);
+}
 
 void arm::armLoop(){
   //Linkages always trying to move to targets
@@ -85,13 +99,35 @@ void arm::armLoop(){
 
   //To ensure two motors arent active at once, this code exists to oscillate between which motors are active every loop
   //In the event running dual motors becomes possible, code to replace IF block is below
-  // lowerLinkDriveMotor.setEffortA(PIDCalcArm(lowerLinkAngle,lowerLinkTarget,lowerKP));
-  // updateLowerLinkagePos();
-  // upperLinkDriveMotor.setEffortB(PIDCalcArm(lowerLinkAngle,lowerLinkTarget,lowerKP));
-  // updateUpperLinkagePos();
+  if(!valWithinTolerance(lowerLinkAngle, lowerLinkTarget, 5)){
+    Serial.println(lowerLinkAngle);
+    Serial.println(PIDCalcArm(lowerLinkAngle,lowerLinkTarget,lowerKP));
+    Serial.println();
+    motorDriver.goodSetEffort(PIDCalcArm(lowerLinkAngle,lowerLinkTarget,lowerKP), true);
+    updateLowerLinkagePos();
+  }
+  else{
+    Stop();
+  }
+  //motorDriver.goodSetEffort(PIDCalcArm(upperLinkAngle,upperLinkTarget,upperKP), false);
+  //updateUpperLinkagePos();
+/*
+  if(lowerLinkDriveMotor.getMotorAEffort() != 0 && !valWithinTolerance(lowerLinkAngle, lowerLinkTarget, lowerKP)){
+    motorDriver.goodSetEffort(0, false);
+    updateLowerLinkagePos();
+    Serial.print(getLowerLinkageDegreeChange());
+    motorDriver.goodSetEffort(100, true);
+  }
+  else if (upperLinkDriveMotor.getMotorBEffort() == 0 && lowerLinkDriveMotor.getMotorAEffort() != 0 && !valWithinTolerance(upperLinkAngle, upperLinkTarget, upperKP)){
+    motorDriver.goodSetEffort(0, true);
+    updateUpperLinkagePos();
+    motorDriver.goodSetEffort(100, false);
+  }
+  else{
+    Stop();
+  }
 
-
-
+  
   if(lowerLinkDriveMotor.getMotorAEffort() != 0){//if lower link trying to move
     lowerLinkDriveMotor.setEffortB(0);//kill it
     updateLowerLinkagePos();//update its pose with any movement cfhanges recorded by the encoder
@@ -115,5 +151,6 @@ void arm::armLoop(){
       currentTableInd++;
       lowerLinkTarget = armPoseTable[currentTableInd].x;//update lower link targ with new pose x, which represents the lower VBar target
       upperLinkTarget = armPoseTable[currentTableInd].y;//update lower link targ with new pose y, which represents the upper VBar target
-    }
+    
+      }*/
 }

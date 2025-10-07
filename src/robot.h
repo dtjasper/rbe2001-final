@@ -45,9 +45,9 @@ protected:
     Pose pose2 {300, 300, 20};
     Pose pose3 {0, 0, 0};
 
-    
-    BlueMotor lowerLinkDriveMotor; //formerly motor A
-    BlueMotor upperLinkDriveMotor; //formerly motor B
+    BlueMotor motorDriver;
+    //BlueMotor lowerLinkDriveMotor; //formerly motor A
+    //BlueMotor upperLinkDriveMotor; //formerly motor B
 
     
 
@@ -65,10 +65,6 @@ protected:
     void EnterIdleState(void);
 
     // /* Navigation methods.*/
-    double getLowerLinkageDegreeChange(void);
-    double getUpperLinkageDegreeChange(void);
-    void updateUpperLinkagePos(void);
-    void updateLowerLinkagePos(void);
     void UpdatePose(const Twist& u);
     void SetDestination(const Pose& destination);
     void DriveToPoint(void);

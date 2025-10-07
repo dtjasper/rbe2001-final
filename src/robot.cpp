@@ -10,8 +10,9 @@ int count{0};
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
+    motorDriver.setup();
     theArm.setup();
-    lowerLinkDriveMotor.setup();
+    
 
 
     //this works
@@ -50,8 +51,9 @@ void Robot::RobotLoop(void)
      /**
      * Run the chassis loop, which handles low-level control.
      */
- 
+    theArm.armLoop();
     //this robotState thing was not there before, so it may be wrong to have
+    /*
     if(robotState != ROBOT_IDLE) {
     Twist velocity;
     if(chassis.ChassisLoop(velocity))
@@ -67,12 +69,12 @@ void Robot::RobotLoop(void)
          * to do all the maths when we don't need to.
          * 
          * While we're at it, we'll toss DriveToPoint() in, as well.
-         */ 
+          
         if(robotState == ROBOT_DRIVE_TO_POINT)
         {
             DriveToPoint();
             if(CheckReachedDestination()) HandleDestination();
         }
     }
-    }
+    }*/
 }

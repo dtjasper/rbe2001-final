@@ -61,8 +61,8 @@ void BlueMotor::setup()
 
     //TCCR3A = 0;
     //TCCR0B = 0; 
-    TCCR3A = (1 << COM3A1) | (1 << WGM30);
-    TCCR3B = (1 << WGM32) | (1 << CS31) | (1 << CS30); // prescaler 64
+   // TCCR3A = (1 << COM3A1) | (1 << WGM30);
+    //TCCR3B = (1 << WGM32) | (1 << CS31) | (1 << CS30); // prescaler 64
 
     OCR3A = 0;
     //OCR0B = 0;
@@ -122,10 +122,10 @@ void BlueMotor::isrA()
     MotorA_newEncoderA = digitalRead(MotorAENCA);
     MotorA_newEncoderB = digitalRead(MotorAENCB);
 
-    if((MotorA_oldEncoderB == LOW && MotorA_newEncoderB == LOW ) && (MotorA_oldEncoderA == LOW && MotorA_newEncoderA == HIGH) ||
-        (MotorA_oldEncoderA == HIGH && MotorA_newEncoderA == LOW) && (MotorA_oldEncoderB == HIGH && MotorA_newEncoderB == HIGH ) ||
-        (MotorA_oldEncoderA == HIGH && MotorA_newEncoderA == HIGH ) && (MotorA_oldEncoderB == LOW && MotorA_newEncoderB == HIGH) ||
-        (MotorA_oldEncoderA == LOW && MotorA_newEncoderA == LOW) && (MotorA_oldEncoderB == HIGH && MotorA_newEncoderB == LOW ))
+    if(((MotorA_oldEncoderB == LOW && MotorA_newEncoderB == LOW ) && (MotorA_oldEncoderA == LOW && MotorA_newEncoderA == HIGH)) ||
+        ((MotorA_oldEncoderA == HIGH && MotorA_newEncoderA == LOW) && (MotorA_oldEncoderB == HIGH && MotorA_newEncoderB == HIGH )) ||
+        ((MotorA_oldEncoderA == HIGH && MotorA_newEncoderA == HIGH ) && (MotorA_oldEncoderB == LOW && MotorA_newEncoderB == HIGH)) ||
+        ((MotorA_oldEncoderA == LOW && MotorA_newEncoderA == LOW) && (MotorA_oldEncoderB == HIGH && MotorA_newEncoderB == LOW )))
         {
             countA++;
         }
@@ -145,10 +145,10 @@ void BlueMotor::isrB()
     MotorB_newEncoderA = digitalRead(MotorBENCA);
     MotorB_newEncoderB = digitalRead(MotorBENCB);
 
-    if((MotorB_oldEncoderB == LOW && MotorB_newEncoderB == LOW ) && (MotorB_oldEncoderA == LOW && MotorB_newEncoderA == HIGH) ||
-        (MotorB_oldEncoderA == HIGH && MotorB_newEncoderA == LOW) && (MotorB_oldEncoderB == HIGH && MotorB_newEncoderB == HIGH ) ||
-        (MotorB_oldEncoderA == HIGH && MotorB_newEncoderA == HIGH ) && (MotorB_oldEncoderB == LOW && MotorB_newEncoderB == HIGH) ||
-        (MotorB_oldEncoderA == LOW && MotorB_newEncoderA == LOW) && (MotorB_oldEncoderB == HIGH && MotorB_newEncoderB == LOW ))
+    if(((MotorB_oldEncoderB == LOW && MotorB_newEncoderB == LOW ) && (MotorB_oldEncoderA == LOW && MotorB_newEncoderA == HIGH)) ||
+        ((MotorB_oldEncoderA == HIGH && MotorB_newEncoderA == LOW) && (MotorB_oldEncoderB == HIGH && MotorB_newEncoderB == HIGH )) ||
+        ((MotorB_oldEncoderA == HIGH && MotorB_newEncoderA == HIGH ) && (MotorB_oldEncoderB == LOW && MotorB_newEncoderB == HIGH)) ||
+        ((MotorB_oldEncoderA == LOW && MotorB_newEncoderA == LOW) && (MotorB_oldEncoderB == HIGH && MotorB_newEncoderB == LOW )))
         {
             countB++;
         }
@@ -160,6 +160,55 @@ void BlueMotor::isrB()
     MotorB_oldEncoderA = MotorB_newEncoderA;
     MotorB_oldEncoderB = MotorB_newEncoderB;
 
+}
+
+void BlueMotor::goodSetEffort(int effort, bool motor){
+    if (effort < 0)
+    {
+        goodSetEffortMotor(-effort, true, motor);
+    }
+    else 
+    {
+        goodSetEffortMotor(effort, false, motor);
+    }
+    
+}
+
+void BlueMotor::goodSetEffortMotor(int effort, bool clockwise, bool aOrB){
+    if(aOrB && effort == 0){
+        digitalWrite(AIN1, LOW);
+        digitalWrite(AIN2, LOW);
+    }
+    else if(!aOrB && effort == 0){
+        digitalWrite(BIN1, LOW);
+        digitalWrite(BIN2, LOW);
+    }
+    else if(aOrB && effort !=0){
+        if (clockwise)
+        {
+            digitalWrite(AIN1, HIGH);
+            digitalWrite(AIN2, LOW);
+        }
+        else
+        {
+            digitalWrite(AIN1, LOW);
+            digitalWrite(AIN2, HIGH);
+        }
+        analogWrite(PWM_MAIN, (effort, 0, 400)); // unsure
+    }
+    else{
+        if (clockwise)
+        {
+        digitalWrite(BIN1, HIGH);
+        digitalWrite(BIN2, LOW);
+        }
+        else
+        {
+        digitalWrite(BIN1, LOW);
+        digitalWrite(BIN2, HIGH);
+        }
+        analogWrite(PWM_MAIN, (effort, 0, 400)); // unsure
+    }
 }
 
 // SETS EFFORT FOR MOTOR A (public)
