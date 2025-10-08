@@ -29,11 +29,11 @@ protected:
     Pose destPose;
 
 
-    Pose pose1 {300, -300, 10};
-    Pose pose2 {300, 300, 20};
-    Pose pose3 {0, 0, 0};
+    Pose pose1 {0, 300, 90};
+    Pose pose2 {500, 300, 0};
+    Pose pose3 {500, 0, 0};
 
-    Pose destination_array[2] = {pose2, pose3};
+    Pose destination_array[3] = {pose2, pose3};
     
 public:
     Robot(void) {keyString.reserve(10);}
