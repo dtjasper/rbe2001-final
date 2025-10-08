@@ -171,6 +171,11 @@ void BlueMotor::goodSetEffort(int effort, bool motor){
     {
         goodSetEffortMotor(effort, false, motor);
     }
+    if(motor){
+        MotorAEffort = effort;
+    }else {
+        MotorBEffort = effort;
+    }
     
 }
 
@@ -209,6 +214,10 @@ void BlueMotor::goodSetEffortMotor(int effort, bool clockwise, bool aOrB){
         }
         analogWrite(PWM_MAIN, (effort, 0, 400)); // unsure
     }
+
+
+
+
 }
 
 // SETS EFFORT FOR MOTOR A (public)
@@ -241,7 +250,7 @@ void BlueMotor::setEffortB(int effort)
 // SETS EFFORT FOR MOTOR A (private, with direction)
 void BlueMotor::setEffortMotorA(int effort, bool clockwise)
 {
-    MotorAEffort = effort;
+    //MotorAEffort = effort;
     if (clockwise)
     {
         digitalWrite(AIN1, HIGH);
@@ -258,7 +267,7 @@ void BlueMotor::setEffortMotorA(int effort, bool clockwise)
 // SETS EFFORT FOR MOTOR B (private, with direction)
 void BlueMotor::setEffortMotorB(int effort, bool clockwise)
 {
-    MotorBEffort = effort;
+    //MotorBEffort = effort;
     if (clockwise)
     {
         digitalWrite(BIN1, HIGH);
