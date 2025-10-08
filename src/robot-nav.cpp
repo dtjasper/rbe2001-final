@@ -63,7 +63,7 @@ bool Robot::CheckReachedDestination(void)
     float distErr = sqrt(dx*dx + dy*dy);
 
 //the idle state stuff shouldn't be here, should be in handle destination, but it wasn't working
-    if (distErr <= 50) {  
+    if (distErr <= 76) {  
         Serial.println("we have reached position");
         chassis.SetMotorEfforts(0,0);
         retVal = true;

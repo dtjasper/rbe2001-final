@@ -30,8 +30,8 @@ protected:
 
 
     Pose pose1 {0, 300, 90};
-    Pose pose2 {500, 300, 0};
-    Pose pose3 {500, 0, 0};
+    Pose pose2 {400, 300, 0};
+    Pose pose3 {400, 0, 0};
 
     Pose destination_array[3] = {pose2, pose3};
     
