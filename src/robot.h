@@ -41,9 +41,9 @@ protected:
     Pose armPose3 {0, 0, 0};
     //Pose armPoseTable[] = {armPose1,armPose2,armPose3};
 
-    Pose pose1 {300, -300, 10};
-    Pose pose2 {300, 300, 20};
-    Pose pose3 {0, 0, 0};
+    Pose pose1 {0, 30, 0};
+    Pose pose2 {40, 30, 0};
+    Pose pose3 {40, 0, 0};
 
     BlueMotor motorDriver;
     //BlueMotor lowerLinkDriveMotor; //formerly motor A
@@ -51,7 +51,7 @@ protected:
 
     
 
-    Pose destination_array[2] = {pose2, pose3};
+    Pose destination_array[3] = {pose1,pose2, pose3};
     
 public:
     Robot(void) {keyString.reserve(10);}

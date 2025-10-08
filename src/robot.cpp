@@ -51,24 +51,24 @@ void Robot::RobotLoop(void)
      /**
      * Run the chassis loop, which handles low-level control.
      */
-    theArm.armLoop();
+    //theArm.armLoop();
     //this robotState thing was not there before, so it may be wrong to have
-    /*
+    
     if(robotState != ROBOT_IDLE) {
     Twist velocity;
     if(chassis.ChassisLoop(velocity))
     {
         // We do FK regardless of state
-        theArm.armLoop();
+        //theArm.armLoop();
         UpdatePose(velocity);
-        //chassis.SetMotorEfforts(0,0); //220,220
+        chassis.SetMotorEfforts(0,0); //220,220
         
-        /**
-         * Here, we break with tradition and only call these functions if we're in the 
-         * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
-         * to do all the maths when we don't need to.
-         * 
-         * While we're at it, we'll toss DriveToPoint() in, as well.
+        
+        //  * Here, we break with tradition and only call these functions if we're in the 
+        //  * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
+        //  * to do all the maths when we don't need to.
+        //  * 
+        //  * While we're at it, we'll toss DriveToPoint() in, as well.
           
         if(robotState == ROBOT_DRIVE_TO_POINT)
         {
@@ -76,5 +76,5 @@ void Robot::RobotLoop(void)
             if(CheckReachedDestination()) HandleDestination();
         }
     }
-    }*/
+    }
 }
