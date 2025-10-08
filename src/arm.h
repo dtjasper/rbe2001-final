@@ -19,7 +19,7 @@ protected:
     
 
     //Values for converting encoder count to degrees. UPDATE
-    double lowerLinkEncoderToDegreeConst = 2;
+    double lowerLinkEncoderToDegreeConst = 4;
     double upperLinkEncoderToDegreeConst = 0.25;
 
     //first two nums represent lower linkage and higher linkage angles respectively, third val is to never change.

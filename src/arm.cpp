@@ -2,7 +2,7 @@
 
 
 //Both below values NEED to be updated with actual arm starting positions. UPDATE
-double lowerLinkStartAngle = 150;//angle between the first virtual four bar and the ground. Four bar has a hard stop when leaning in towards ROMI's center, this should be around that
+double lowerLinkStartAngle = 90;//angle between the first virtual four bar and the ground. Four bar has a hard stop when leaning in towards ROMI's center, this should be around that
 double upperLinkStartAngle = 0;//angle between the two "interior" links on both virtual four bars. In resting, try keeping this close to 0 as possibl
 
 //Robot starts in rest, so both values should initialize to their start values
@@ -36,7 +36,7 @@ uint16_t clawOpenPos = 0;
 int currentTableInd = 0;
 
 void arm::setup(){
-    lowerLinkTarget = 90;
+    lowerLinkTarget = 45;
     upperLinkTarget = armPose1.y;
     needOscillate = armPose1.theta != 0; 
     lowerLinkAngle = lowerLinkStartAngle; 
@@ -67,9 +67,9 @@ void arm::updateLowerLinkagePos(){
   double currentMotorPos = motorDriver.getPositionA();
   double motorTranslate;
   if(motorDriver.getMotorAEffort()>0){
-    motorTranslate = pow(pow(currentMotorPos-prevLowerPos,2),1.0/2);
-  }else if(motorDriver.getMotorAEffort()<0){
     motorTranslate = -pow(pow(currentMotorPos-prevLowerPos,2),1.0/2);
+  }else if(motorDriver.getMotorAEffort()<0){
+    motorTranslate = pow(pow(currentMotorPos-prevLowerPos,2),1.0/2);
   }else{
     motorTranslate = 0;
   }

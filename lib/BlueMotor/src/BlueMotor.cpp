@@ -163,12 +163,17 @@ void BlueMotor::isrB()
 }
 
 void BlueMotor::goodSetEffort(int effort, bool motor){
+
+
+
     if (effort < 0)
     {
+        
         goodSetEffortMotor(-effort, true, motor);
     }
     else 
     {
+        
         goodSetEffortMotor(effort, false, motor);
     }
     if(motor){
